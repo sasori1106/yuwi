@@ -220,11 +220,8 @@ body {
     max-width: 480px;
     height: 85%;
     max-height: 750px;
-    padding: 60px 35px 40px;
-    overflow-y: auto;
     transform: scale(0.8);
     transition: 0.4s;
-    text-align: left;
     font-family: Georgia, "Times New Roman", serif;
     color: #5b3a29;
 
@@ -242,7 +239,9 @@ body {
         0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* Wooden scroll rods capping the top and bottom of the paper */
+/* Wooden scroll rods capping the top and bottom of the paper.
+   These belong to .full-letter, which no longer scrolls, so they
+   now stay pinned in place instead of moving with the text. */
 .full-letter::before,
 .full-letter::after {
     content: "";
@@ -267,9 +266,32 @@ body {
     bottom: -11px;
 }
 
+/* This inner wrapper is the actual scrolling area — only the text
+   scrolls here, independently of the rods on the outer frame. */
 .full-letter-content {
     position: relative;
     z-index: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 30px 30px 30px;
+    text-align: left;
+}
+
+/* Slim, warm-toned scrollbar so it fits the parchment look
+   instead of the browser's default gray bar (Chrome/Edge/Safari) */
+.full-letter-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.full-letter-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.full-letter-content::-webkit-scrollbar-thumb {
+    background: #c9a76c;
+    border-radius: 4px;
 }
 
 .full-letter-content h2 {
