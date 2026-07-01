@@ -24,13 +24,25 @@ body {
     position: absolute;
     width: 260px;
     height: 170px;
-    background: white;
     left: 20px;
     bottom: 0;
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 20px;
     text-align: center;
     z-index: 1;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #5b3a29;
+
+    /* Aged-paper texture: soft brown stains layered over a warm parchment tone */
+    background-color: #f4ecd8;
+    background-image:
+        radial-gradient(circle at 15% 20%, rgba(139, 94, 52, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(139, 94, 52, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(139, 94, 52, 0.1) 0%, transparent 50%);
+    border: 1px solid #c9a76c;
+    box-shadow:
+        inset 0 0 15px rgba(139, 94, 52, 0.25),
+        0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .front {
@@ -42,6 +54,19 @@ body {
     border-top: 100px solid transparent;
     border-bottom: 100px solid #d95d5d;
     z-index: 3;
+}
+
+/* Subtle shadow near the envelope's pointed bottom fold, for a bit of depth */
+.front::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
 }
 
 .flap {
@@ -59,9 +84,62 @@ body {
     z-index: 4;
 }
 
+/* Soft diagonal shine on the flap, confined to its triangle shape via clip-path */
+.flap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%);
+    pointer-events: none;
+}
+
 .envelope.open .flap {
     transform: rotateX(180deg);
     z-index: 0;
+}
+
+/* Heart-shaped wax seal sitting at the flap's tip, fades away once opened */
+.seal {
+    position: absolute;
+    top: 88px;
+    left: 50%;
+    margin-left: -10px;
+    width: 20px;
+    height: 20px;
+    background: #c1435a;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+    z-index: 5;
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.seal::before,
+.seal::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: inherit;
+}
+
+.seal::before {
+    top: -10px;
+    left: 0;
+}
+
+.seal::after {
+    top: 0;
+    left: 10px;
+}
+
+.envelope.open .seal {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.3);
 }
 
 /* Pop-up-then-center animation, plays only after "open" class is added */
@@ -81,8 +159,18 @@ body {
 }
 
 .envelope.open .letter {
-    animation: popUpAndCenter 1s ease forwards;
+    animation: popUpAndCenter 2s ease forwards;
     animation-delay: 0.5s; /* waits for the flap to finish opening */
+}
+
+.letter-preview {
+    margin-top: 10px;
+    font-family: "Brush Script MT", "Segoe Script", cursive, Georgia, serif;
+    font-size: 6px;       /* tiny on purpose — meant to be felt, not read */
+    line-height: 9px;
+    text-align: left;
+    color: #5b3a29;
+    opacity: 0.8;
 }
 
 /* Once JS takes over positioning for dragging, this class removes
@@ -132,13 +220,67 @@ body {
     max-width: 500px;
     height: 70%;
     max-height: 600px;
-    background: white;
-    border-radius: 10px;
-    padding: 50px 25px 25px;
+    padding: 60px 30px 40px;
     overflow-y: auto;
     transform: scale(0.8);
     transition: 0.4s;
     text-align: center;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #5b3a29;
+
+    /* Aged-paper texture, same idea as the small letter but more visible at this size */
+    background-color: #f4ecd8;
+    background-image:
+        radial-gradient(circle at 10% 15%, rgba(139, 94, 52, 0.14) 0%, transparent 35%),
+        radial-gradient(circle at 90% 20%, rgba(139, 94, 52, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 20% 85%, rgba(139, 94, 52, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 80% 90%, rgba(139, 94, 52, 0.1) 0%, transparent 40%);
+    border-left: 1px solid #c9a76c;
+    border-right: 1px solid #c9a76c;
+    box-shadow:
+        inset 0 0 30px rgba(139, 94, 52, 0.3),
+        0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Wooden scroll rods capping the top and bottom of the paper */
+.full-letter::before,
+.full-letter::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    right: -10px;
+    height: 22px;
+    border-radius: 11px;
+    background: linear-gradient(#8a5a34, #6b4423 45%, #8a5a34);
+    box-shadow:
+        inset 0 3px 4px rgba(255, 255, 255, 0.25),
+        inset 0 -3px 4px rgba(0, 0, 0, 0.4),
+        0 3px 6px rgba(0, 0, 0, 0.35);
+    z-index: 2;
+}
+
+.full-letter::before {
+    top: -11px;
+}
+
+.full-letter::after {
+    bottom: -11px;
+}
+
+.full-letter-content {
+    position: relative;
+    z-index: 1;
+}
+
+.full-letter-content h2 {
+    font-size: 26px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+}
+
+.full-letter-content p {
+    font-size: 16px;
+    line-height: 1.7;
 }
 
 .letter-overlay.show .full-letter {
@@ -158,8 +300,116 @@ body {
     font-size: 20px;
     line-height: 1;
     cursor: pointer;
+    z-index: 3;
 }
 
 .close-btn:hover {
     background: #d95d5d;
+}
+
+/* --- Hearts that float up when the envelope opens --- */
+.hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* hearts should never block clicks/drag */
+    overflow: visible;
+    z-index: 6; /* above the envelope, below the fullscreen overlay */
+}
+
+.heart {
+    position: absolute;
+    bottom: 90px; /* roughly where the envelope opening is */
+    font-size: 20px;
+    color: #e07a7a;
+    opacity: 0;
+    animation-name: floatUp;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate(0, 0) scale(0.6);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--drift), -220px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* --- "Drag me" hint with arrow, shown once the letter is draggable --- */
+.drag-hint {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #d95d5d;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none; /* never intercepts the drag itself */
+    transition: opacity 0.4s;
+    z-index: 20;
+}
+
+.letter.show-hint .drag-hint {
+    opacity: 1;
+    animation: bounceHint 1.2s ease-in-out infinite;
+}
+
+.drag-hint .arrow {
+    font-size: 22px;
+    line-height: 1;
+}
+
+@keyframes bounceHint {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(6px);
+    }
+}
+
+/* --- Hearts spawned while the letter is being dragged --- */
+.drag-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* never blocks the drag itself */
+    z-index: 50; /* above the letter (10), below the fullscreen overlay (100) */
+}
+
+.drag-heart {
+    position: fixed;
+    opacity: 0;
+    animation-name: dragHeartFloat;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes dragHeartFloat {
+    0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--drift), -50px) scale(1);
+        opacity: 0;
+    }
 }
