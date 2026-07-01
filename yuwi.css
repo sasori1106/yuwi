@@ -216,15 +216,15 @@ body {
 
 .full-letter {
     position: relative;
-    width: 90%;
-    max-width: 500px;
-    height: 70%;
-    max-height: 600px;
-    padding: 60px 30px 40px;
+    width: 85%;
+    max-width: 480px;
+    height: 85%;
+    max-height: 750px;
+    padding: 60px 35px 40px;
     overflow-y: auto;
     transform: scale(0.8);
     transition: 0.4s;
-    text-align: center;
+    text-align: left;
     font-family: Georgia, "Times New Roman", serif;
     color: #5b3a29;
 
@@ -273,9 +273,12 @@ body {
 }
 
 .full-letter-content h2 {
-    font-size: 26px;
-    margin-bottom: 14px;
-    letter-spacing: 1px;
+    font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
+    font-size: 22px;
+    font-weight: normal;
+    font-style: italic; /* helps it still look handwritten-ish if the script font isn't available */
+    margin-bottom: 22px;
+    letter-spacing: 0.5px;
 }
 
 .full-letter-content p {
